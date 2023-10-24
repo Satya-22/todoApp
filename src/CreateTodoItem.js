@@ -1,5 +1,8 @@
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 export default function CreateTodoItem({ user, handleAddTodoItem }) {
+
   const date = new Date();
 
   let currentDay = String(date.getDate()).padStart(2, "0");
@@ -10,7 +13,10 @@ export default function CreateTodoItem({ user, handleAddTodoItem }) {
 
   let currentDate = `${currentDay}-${currentMonth}-${currentYear}`;
 
+  let id = uuidv4();
+
   const [title, setTitle] = useState("");
+  
   const [description, setDescription] = useState("");
 
   function handleTitle(evt) {
@@ -22,6 +28,7 @@ export default function CreateTodoItem({ user, handleAddTodoItem }) {
 
   function handleCreate() {
     const newTodo = {
+      id,
       title,
       description,
       author: user,
@@ -60,8 +67,7 @@ export default function CreateTodoItem({ user, handleAddTodoItem }) {
           id="create-description"
         />
       </div>
-      
-        &nbsp;<div>Author : {user} </div> 
+      &nbsp;<div>Author : {user} </div>
       &nbsp; <div>DateCreated : {currentDate}</div>&nbsp;
       <br />
       <input type="submit" value="Create" />

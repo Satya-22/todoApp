@@ -1,67 +1,121 @@
-
 import "./App.css";
-import UserBar from './UserBar'
-import CreateTodoItem from './CreateTodoItem'
-import { useState } from "react";
+
+import UserBar from "./UserBar";
+import CreateTodoItem from "./CreateTodoItem";
+import { useReducer } from "react";
 import TodoList from "./TodoList";
+import appReducer from "./todoReducer";
 
 function App() {
-  const [user, setUser] = useState('')
-  const initialItems = [
-    {
-      title: "TODO ITEM1",
-      description: "TODO ITEM1 DESC",
-      author: user,
-      DateCreated: Date.now,
-      completed: false,
-    },
-    {
-      title: "TODO ITEM2",
-      description: "TODO ITEM2 DESC",
-      author: user,
-      DateCreated: Date.now,
-      completed: false,
-    },
-  ];
- const [todolist, setTodo] = useState(initialItems)
-  
-  const handleAddTodoItem = (newTodo) => { 
-   setTodo([newTodo, ...todolist]);
+  // const [user, setUser] = useState('');
+
+  // const initialItems = [
+  //   {
+  //     title: "TODO ITEM1",
+  //     description: "TODO ITEM1 DESC",
+  //     author: "User1",
+  //     DateCreated: Date.now,
+  //     completed: false,
+  //   },
+  //   {
+  //     title: "TODO ITEM2",
+  //     description: "TODO ITEM2 DESC",
+  //     author: "User2",
+  //     DateCreated: Date.now,
+  //     completed: false,
+  //   },
+  // ];
+  const [state, dispatch] = useReducer(appReducer, {
+    user: "",
+    todolist: [],
+  });
+  const { user, todolist } = state;
+
+  const handleAddTodoItem = (newTodo) => {
+    dispatch({
+      type: "CREATE_TODO",
+      ...newTodo,
+    });
+  };
+
+  function handleCheckBoxToggle(id) {
+    dispatch({
+      type: "TOGGLE_TODO",
+      id,
+    });
   }
 
-  function handleCheckBoxToggle(title) { 
-    let copyList = [...todolist];
-    copyList.forEach((val)=>{
-      if (val.title == title) {
-        val.completed = !val.completed;
-      }
-    })
-    setTodo(copyList);
+  function handleDeleteTodo(id) {
+    dispatch({
+      type: "DELETE_TODO",
+      id,
+    });
   }
-  
-  return (
-    <div>
-      <br />
-      <UserBar user={user} setUser={setUser} />
-      <br />
-      <hr></hr>
-      <label>
-        <h3>Create TODO : </h3>
-      </label>
-      <br />
-      <span>&nbsp;&nbsp;</span>
-      <CreateTodoItem user={user} handleAddTodoItem={handleAddTodoItem} />
-      <br />
-      <hr></hr>
+
+  if (user) {
+    return (
       <div>
-        <h3>Todo List</h3>
-        <TodoList
-          todolist={todolist}
-          handleCheckBoxToggle={handleCheckBoxToggle}
-        />
+        <br />
+        <UserBar user={user} dispatchUser={dispatch} />
+        <br />
+        <hr></hr>
+
+        <label>
+          <h3>
+            <u>
+              <strong>Create TODO</strong>
+            </u>
+            :
+          </h3>
+        </label>
+        <br />
+        <span>&nbsp;&nbsp;</span>
+
+        <CreateTodoItem user={user} handleAddTodoItem={handleAddTodoItem} />
+
+        <br />
+        <hr></hr>
+
+        <div>
+          <h3>
+            <u>
+              <strong>Todo List</strong>
+            </u>
+            :
+          </h3>
+          <TodoList
+            todolist={todolist}
+            handleCheckBoxToggle={handleCheckBoxToggle}
+            handleDeleteTodo={handleDeleteTodo}
+          />
+        </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div>
+        <br />
+        <UserBar user={user} dispatchUser={dispatch} />
+        <br />
+        <span>&nbsp;&nbsp;</span>
+        <br />
+        <hr></hr>
+        <div>
+          <h3>
+            <u>
+              <strong>Todo List</strong>
+            </u>
+            :
+          </h3>
+          <TodoList
+            todolist={todolist}
+            handleCheckBoxToggle={handleCheckBoxToggle}
+            handleDeleteTodo={handleDeleteTodo}
+          />
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;

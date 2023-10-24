@@ -2,26 +2,25 @@ import Login from "./Login";
 import Logout from "./Logout";
 import Register from "./Register";
 
-export default function UserBar({ user, setUser }) {
+export default function UserBar({ user, dispatchUser }) {
   if (user) {
-    return <Logout user={user} setUser={setUser} />;
+    return <Logout user={user} dispatchUser={dispatchUser} />;
   } else {
     return (
       <>
-        <label>
-          <h3>Login</h3>
-        </label>
+        <h3>
+          <u>
+            <strong>Login/Registration </strong>
+          </u>
+          :
+        </h3>
         &nbsp;&nbsp;
         <span>&nbsp;&nbsp;</span>
-        <Login setUser={setUser} />
-        <label>
-          <br />
-          <h3>Register</h3>
-          <br />
-        </label>
+        <Login dispatchUser={dispatchUser} />
+        <br />
         &nbsp;&nbsp;
         <span>&nbsp;&nbsp;</span>
-        <Register setUser={setUser} />
+        <Register dispatchUser={dispatchUser} />
       </>
     );
   }
