@@ -7,24 +7,6 @@ import TodoList from "./TodoList";
 import appReducer from "./todoReducer";
 
 function App() {
-  // const [user, setUser] = useState('');
-
-  // const initialItems = [
-  //   {
-  //     title: "TODO ITEM1",
-  //     description: "TODO ITEM1 DESC",
-  //     author: "User1",
-  //     DateCreated: Date.now,
-  //     completed: false,
-  //   },
-  //   {
-  //     title: "TODO ITEM2",
-  //     description: "TODO ITEM2 DESC",
-  //     author: "User2",
-  //     DateCreated: Date.now,
-  //     completed: false,
-  //   },
-  // ];
   const [state, dispatch] = useReducer(appReducer, {
     user: "",
     todolist: [],
