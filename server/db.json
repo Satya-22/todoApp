@@ -1,0 +1,44 @@
+{
+  "todos": [
+    {
+      "title": "satya",
+      "description": "ngc,hgc",
+      "author": "yoganand@gmaail.com",
+      "dateCreated": "07-11-2023",
+      "completed": true,
+      "id": "577d71fa-bb3a-469b-afbe-b2a1d9e82a9e",
+      "dateCompleted": "07-11-2023 01:20:27"
+    },
+    {
+      "title": "satya1",
+      "description": "ngc,hgc",
+      "author": "yoganand@gmaail.com",
+      "dateCreated": "07-11-2023",
+      "completed": true,
+      "id": "e8ab27f2-2ecc-47b7-8c05-a4e602579091",
+      "dateCompleted": "07-11-2023 01:20:41"
+    }
+  ],
+  "users": [
+    {
+      "email": "satyaadd22@gmail.com",
+      "password": "$2a$10$J6VLXAKOKKR9V2bzfmANFeFI/yGQE1oMPlsorTdLxPJWx30zbxwDG",
+      "id": 1
+    },
+    {
+      "email": "satya222@gmail.com",
+      "password": "$2a$10$9Av/E/bIo57qoRrNAi/gJO8ijQXsEqrzeqodVA3bR4dBFRCt0pWXK",
+      "id": 4
+    },
+    {
+      "email": "naddala@depaul.edu",
+      "password": "$2a$10$hP7fCuy6Tn0ifA9ir4vzpevRSdVAC.c4AXIu951X71ihMUjtheQj2",
+      "id": 5
+    },
+    {
+      "email": "yoganand@gmaail.com",
+      "password": "$2a$10$NzIKgNZF9KPuIfXMjOo/xOzn.qvij7bbKF5AdTBsda8fGYALQUTqC",
+      "id": 6
+    }
+  ]
+}

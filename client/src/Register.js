@@ -1,18 +1,43 @@
 import React, { useState } from "react";
-export default function Register({ dispatchUser }) {
-  const [username, setUserName] = useState('')
-  const [password, setPassword] = useState('')
-  const [repeatpassword, setRepeatPassword] = useState('')
+import { useResource } from "react-request-hook";
+import { useEffect } from "react";
+import { useContext } from "react";
+import { StateContext } from "./contexts";
 
-  function handleUsername(evt) { setUserName(evt.target.value) }
-  function handlePasssword(evt) { setPassword(evt.target.value) }
-  function handleRepeatPassword(evt) { setRepeatPassword(evt.target.value) }
-  
+export default function Register() {
+  const { dispatch: dispatchUser } = useContext(StateContext);
+  const [user, register] = useResource((username, password) => ({
+    url: "/users",
+    method: "post",
+    data: { email: username, password },
+  }));
+
+  useEffect(() => {
+    if (user && user.data) {
+      dispatchUser({ type: "REGISTER", username: user.data.user.email });
+    }
+  }, [user, dispatchUser]);
+
+  const [username, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [repeatpassword, setRepeatPassword] = useState("");
+
+  function handleUsername(evt) {
+    setUserName(evt.target.value);
+  }
+  function handlePasssword(evt) {
+    setPassword(evt.target.value);
+  }
+  function handleRepeatPassword(evt) {
+    setRepeatPassword(evt.target.value);
+  }
+
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
         // setUser(username);
+        register(username, password);
         dispatchUser({ type: "REGISTER", username: username });
       }}
     >
@@ -38,7 +63,7 @@ export default function Register({ dispatchUser }) {
       />
       <br />
       <br />
-      <label htmlFor="register-password-repeat">Repeat password:</label>
+      <label htmlFor="register-password-repeat">&nbsp;Repeat password:</label>
       &nbsp;{" "}
       <input
         type="password"

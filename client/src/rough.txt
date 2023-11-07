@@ -1,0 +1,43 @@
+import { useContext } from "react";
+import Login from "./Login";
+import Logout from "./Logout";
+import Register from "./Register";
+import { StateContext } from "./contexts";
+
+export default function UserBar() {
+  const { state } = useContext(StateContext);
+  const { user } = state;
+  if (user) {
+    return (
+      <div className="user-bar">
+        <div className="user-info">
+          <Logout />
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <>
+        <div className="user-bar">
+          <div className="login-register"></div>
+          <h3 className="text-center mb-4">
+            <u>
+              <strong>Login/Registration </strong>
+            </u>
+          </h3>
+          &nbsp;&nbsp;
+          <span>&nbsp;&nbsp;</span>
+          <div className="text-center">
+            <Login />
+          </div>
+          <br />
+          &nbsp;&nbsp;
+          <span>&nbsp;&nbsp;</span>
+          <div className="text-center mt-2">
+            <Register />
+          </div>
+        </div>
+      </>
+    );
+  }
+}

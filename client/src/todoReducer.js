@@ -28,6 +28,7 @@ function todosReducer(state, action) {
           const updatedTodo = {
             ...item,
             completed: !item.completed,
+            dateCompleted: action.cdate,
           };
           return updatedTodo;
         }
@@ -38,6 +39,8 @@ function todosReducer(state, action) {
       const newState1 = newState.filter((item) => item.id !== action.id);
 
       return newState1;
+    case "FETCH_TODOS":
+      return action.todos;
 
     default:
       return state;
