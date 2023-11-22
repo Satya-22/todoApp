@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const uri =
-  "";
+const uri = "";
 function connect() {
   const options = { useNewUrlParser: true };
   mongoose.connect(uri, options).then(
