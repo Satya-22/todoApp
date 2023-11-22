@@ -9,13 +9,6 @@ import appReducer from "./todoReducer";
 import { StateContext } from "./contexts";
 
 function App() {
-
-  // useEffect(() => {
-  //   fetch("/api/todos")
-  //     .then((result) => result.json())
-  //     .then((posts) => dispatch({ type: "FETCH_POSTS", posts }));
-  // }, []);
-
   const [state, dispatch] = useReducer(appReducer, {
     user: "",
     todolist: [],
@@ -23,46 +16,41 @@ function App() {
   const { user } = state;
 
   const [todoResponse, getTodos] = useResource(() => ({
-    url: "/todos",
+    url: "/todo",
     method: "get",
+    headers: { Authorization: `${state?.user?.access_token}` },
   }));
 
-  useEffect(getTodos, []);
+  useEffect(() => {
+    if (user) {
+      getTodos();
+    }
+  }, [state?.user?.access_token]);
 
   useEffect(() => {
-    if (todoResponse && todoResponse.data) {
-      dispatch({ type: "FETCH_TODOS", todos: todoResponse.data.reverse() });
+    if (todoResponse && todoResponse.isLoading === false && todoResponse.data) {
+      dispatch({
+        type: "FETCH_TODOS",
+        todos: todoResponse.data.reverse(),
+      });
+    }
+    if (todoResponse.error) {
+      dispatch({ type: "CLEAR_TODOS" });
     }
   }, [todoResponse]);
 
+  useEffect(() => {
+    if (user) {
+      document.title = `${user.username}’s Blog`;
+    } else {
+      document.title = "Blog";
+    }
+  }, [user]);
 
-  
+  const userBarStyle = {
+    backgroundColor: "#f3f4f6",
+  };
 
-  // const handleAddTodoItem = (newTodo) => {
-  //   dispatch({
-  //     type: "CREATE_TODO",
-  //     ...newTodo,
-  //   });
-  // };
-
-  // function handleCheckBoxToggle(id) {
-  //   dispatch({
-  //     type: "TOGGLE_TODO",
-  //     id,
-  //   });
-  // }
-
-  // function handleDeleteTodo(id) {
-  //   dispatch({
-  //     type: "DELETE_TODO",
-  //     id,
-  //   });
-  // }
-
-      const userBarStyle = {
-        backgroundColor: "#f3f4f6",
-      };
-  
   if (user) {
     return (
       <div style={userBarStyle}>

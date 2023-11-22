@@ -6,17 +6,28 @@ import { StateContext } from "./contexts";
 
 export default function Register() {
   const { dispatch: dispatchUser } = useContext(StateContext);
+  const [status, setStatus] = useState("");
   const [user, register] = useResource((username, password) => ({
-    url: "/users",
+    url: "/auth/register",
     method: "post",
-    data: { email: username, password },
+    data: { username, password,passwordConfirmation:password },
   }));
 
+  // useEffect(() => {
+  //   if (user && user.data) {
+  //     dispatchUser({ type: "REGISTER", username: user.data.user.email });
+  //   }
+  // }, [user, dispatchUser]);
+
   useEffect(() => {
-    if (user && user.data) {
-      dispatchUser({ type: "REGISTER", username: user.data.user.email });
+    if (user && user.isLoading === false && (user.data || user.error)) {
+      if (user.error) {
+        setStatus("Registration failed, please try again later.");
+      } else {
+        setStatus("Registration successful. You may now login.");
+      }
     }
-  }, [user, dispatchUser]);
+  }, [user]);
 
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -38,7 +49,7 @@ export default function Register() {
         e.preventDefault();
         // setUser(username);
         register(username, password);
-        dispatchUser({ type: "REGISTER", username: username });
+        // dispatchUser({ type: "REGISTER", username: username });
       }}
     >
       <label htmlFor="register-username">Username:</label>
@@ -83,6 +94,7 @@ export default function Register() {
           password !== repeatpassword
         }
       />
+      {status && <p>{status}</p>}
     </form>
   );
 }

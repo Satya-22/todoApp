@@ -16,29 +16,33 @@ export default function Login() {
   const { dispatch } = useContext(StateContext);
 
   const [user, login] = useResource((username, password) => ({
-    url: "/login",
+    url: "/auth/login",
     method: "post",
-    data: { email: username, password },
+    data: { username, password },
   }));
 
-  useEffect(() => {
-    if (user) {
-      if (user?.data?.user) {
-        console.log("login success Reached", user.data.user.email);
-        dispatch({ type: "LOGIN", username: user.data.user.email });
-      } else {
-        console.log("login failed Reached");
+    useEffect(() => {
+      if (user && user.isLoading === false && (user.data || user.error)) {
+        if (user.error) {
+          console.log("login failed Reached");
+        } else {
+          dispatch({
+            type: "LOGIN",
+            username: username,
+            access_token: user.data.access_token,
+          });
+        }
       }
-    }
-  }, [user, dispatch]);
+    }, [user]);
+  
+    useEffect(() => {
+      if (user?.error) {
+        setLoginFailed(true);
+      } else {
+        setLoginFailed(false);
+      }
+    }, [user]);
 
-  useEffect(() => {
-    if (user?.error) {
-      setLoginFailed(true);
-    } else {
-      setLoginFailed(false);
-    }
-  }, [user]);
 
   return (
     <>

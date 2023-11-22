@@ -9,9 +9,10 @@ export default function Logout() {
       onSubmit={(e) => {
         e.preventDefault();
         dispatchUser({ type: "LOGOUT" });
+        dispatchUser({ type: "CLEAR_TODOS" });
       }}
     >
-      Logged in as: &nbsp;<b>{user}</b>&nbsp;
+      Logged in as: &nbsp;<b>{user.username}</b>&nbsp;
       <br />
       <br />
       <input type="submit" value="Logout" />

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { StateContext } from "./contexts";
 import { useResource } from "react-request-hook";
 
@@ -8,9 +8,10 @@ export default function Todo({
   author,
   dateCreated,
   completed,
-  id,
+  _id,
   dateCompleted,
 }) {
+  console.log("Todo ID Check : ", title, _id, completed, dateCompleted);
   const date = new Date();
 
   let currentDay = String(date.getDate()).padStart(2, "0");
@@ -25,20 +26,55 @@ export default function Todo({
   // we will display the date as DD-MM-YYYY
 
   let currentDate = `${currentDay}-${currentMonth}-${currentYear} ${currentHour}:${currentMinute}:${currentSecond}`;
-  const { dispatch } = useContext(StateContext);
+  const { state, dispatch } = useContext(StateContext);
+  const { user }  = state;
   const [dtodo, deleteTodo] = useResource(
-    ({ title, description, author, dateCreated, completed, id,dateCompleted }) => ({
-      url: `/todos/${id}`,
+    ({
+      title,
+      description,
+      author,
+      dateCreated,
+      completed,
+      _id,
+      dateCompleted,
+    }) => ({
+      url: `/todo/${_id}`,
       method: "delete",
-      data: { title, description, author, dateCreated, completed, id,dateCompleted },
+      headers: { Authorization: `${state.user.access_token}` },
+      data: {
+        title,
+        description,
+        author,
+        dateCreated,
+        completed,
+        _id,
+        dateCompleted,
+      },
     })
   );
 
   const [uptodo, updateTodo] = useResource(
-    ({ title, description, author, dateCreated, completed, id,dateCompleted }) => ({
-      url: `/todos/${id}`,
+    ({
+      title,
+      description,
+      author,
+      dateCreated,
+      completed,
+      _id,
+      dateCompleted,
+    }) => ({
+      url: `/todo/${_id}`,
       method: "put",
-      data: { title, description, author, dateCreated, completed, id ,dateCompleted},
+      headers: { Authorization: `${state.user.access_token}` },
+      data: {
+        title,
+        description,
+        author,
+        dateCreated,
+        completed,
+        _id,
+        dateCompleted,
+      },
     })
   );
 
@@ -50,11 +86,12 @@ export default function Todo({
       author: author,
       dateCreated: dateCreated,
       completed: !completed,
-      id: id,
-      dateCompleted: cdate,
+      _id: _id,
+      // dateCompleted: cdate,
+      dateCompleted: completed ? "" : cdate,
     };
     updateTodo(updatedTodo);
-    dispatch({ type: "TOGGLE_TODO", id,cdate });
+    //  dispatch({ type: "TOGGLE_TODO", _id, cdate });
   }
 
   const deletedData = {
@@ -63,23 +100,56 @@ export default function Todo({
     author: author,
     dateCreated: dateCreated,
     completed: completed,
-    id: id,
+    _id: _id,
     dateCompleted: "",
   };
 
   function onDeleteTodo() {
+    console.log("Delete Todo Reached : ", deletedData);
+    console.log("ID : ", _id);
     deleteTodo(deletedData);
-    dispatch({ type: "DELETE_TODO", id });
+    // dispatch({ type: "DELETE_TODO", _id });
   }
-  
+
+  useEffect(() => {
+    if (dtodo.isLoading === false && dtodo.data) {
+      dispatch({
+        type: "DELETE_TODO",
+        _id
+      });
+    }
+  }, [dtodo]);
+
+  useEffect(() => {
+    if (uptodo.isLoading === false && uptodo.data) {
+      dispatch({
+        type: "TOGGLE_TODO",
+        _id,
+        cdate: uptodo.data.dateCompleted, 
+        completed: uptodo.data.completed,
+      });
+    }
+  }, [uptodo]);
+
+      const userBarStyle = {
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "column",
+        backgroundColor: "#f3f4f6",
+        borderBottom: "1px solid #ccc",
+        width: "100%",
+        padding: "10px",
+        margin: "0",
+      };
   return (
-    <div>
+    <div style={userBarStyle}>
       <h3> Title : {title}</h3>
       <div>Description : {description}</div>
       <br />
       <div>Author: {author}</div>
       <br />
       <div>DateCreated : {dateCreated}</div>
+      <br/>
       <div>
         Completed :{" "}
         <input
@@ -100,7 +170,6 @@ export default function Todo({
           Delete
         </button>
       </div>
-      <hr></hr>
       <br />
     </div>
   );
